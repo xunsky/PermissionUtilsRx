@@ -86,9 +86,12 @@ public class PermissionUtilsRx {
 
         for (int i = 0; i < permissions.length; i++) {
             String permission = permissions[i];
-            boolean isPermanentlyReject = !ActivityCompat.shouldShowRequestPermissionRationale(act, permission);
-            if (isPermanentlyReject)
-                return true;
+            //在该权限未被授权的前提下,系统表示不提示,则表示被永久拒绝
+            if (act.checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED){
+                boolean isPermanentlyReject = !ActivityCompat.shouldShowRequestPermissionRationale(act, permission);
+                if (isPermanentlyReject)
+                    return true;
+            }
         }
         return false;
     }
