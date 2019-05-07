@@ -80,6 +80,7 @@ public class PermissionUtilsRx {
         return true;
     }
 
+    //该方法只能在发起权限申请后使用
     public static boolean haveSomePermissionPermanentlyDenied(Activity act, String... permissions) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return false;
