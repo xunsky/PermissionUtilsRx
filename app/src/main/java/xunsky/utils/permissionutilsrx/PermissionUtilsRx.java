@@ -14,7 +14,7 @@ import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 
 public class PermissionUtilsRx {
-    public static void requestPermissions(AppCompatActivity act, final CallBack callBack, String... permissions) {
+    public static void requestPermissions(final AppCompatActivity act, final CallBack callBack, final String... permissions) {
         new RxPermissions(act)
                 .request(permissions)
                 .subscribe(new Consumer<Boolean>() {
@@ -23,20 +23,20 @@ public class PermissionUtilsRx {
                         if (aBoolean) {
                             callBack.success();
                         } else {
-                            callBack.fail("user reject");
+                            callBack.fail("user reject",haveSomePermissionPermanentlyDenied(act,permissions));
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        callBack.fail(throwable.getMessage());
+                        callBack.fail(throwable.getMessage(),false);
                     }
                 });
     }
 
     //在Fragment中申请权限时不要使用fragment.getActivity()
     //有可能会导致java.lang.IllegalStateException: FragmentManager is already executing transactions.
-    public static void requestPermissions(Fragment fragment, final CallBack callBack, String... permissions) {
+    public static void requestPermissions(final Fragment fragment, final CallBack callBack, final String... permissions) {
         new RxPermissions(fragment)
                 .request(permissions)
                 .subscribe(new Consumer<Boolean>() {
@@ -45,13 +45,13 @@ public class PermissionUtilsRx {
                         if (aBoolean) {
                             callBack.success();
                         } else {
-                            callBack.fail("user reject");
+                            callBack.fail("user reject",haveSomePermissionPermanentlyDenied(fragment.getActivity(),permissions));
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        callBack.fail(throwable.getMessage());
+                        callBack.fail(throwable.getMessage(),false);
                     }
                 });
 
@@ -100,6 +100,6 @@ public class PermissionUtilsRx {
     public interface CallBack {
         void success();
 
-        void fail(String message);
+        void fail(String message,boolean somePermissionPermanentlyReject);
     }
 }
