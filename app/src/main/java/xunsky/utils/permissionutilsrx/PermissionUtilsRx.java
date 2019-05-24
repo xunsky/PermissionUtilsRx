@@ -11,12 +11,23 @@ import android.support.v7.app.AppCompatActivity;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 
 public class PermissionUtilsRx {
     public static void requestPermissions(final AppCompatActivity act, final CallBack callBack, final String... permissions) {
-        new RxPermissions(act)
-                .request(permissions)
+        Observable.just(1)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Function<Integer, ObservableSource<Boolean>>() {
+                    @Override
+                    public ObservableSource<Boolean> apply(Integer integer) throws Exception {
+                        return new RxPermissions(act)
+                                .request(permissions);
+                    }
+                })
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {
@@ -37,8 +48,16 @@ public class PermissionUtilsRx {
     //在Fragment中申请权限时不要使用fragment.getActivity()
     //有可能会导致java.lang.IllegalStateException: FragmentManager is already executing transactions.
     public static void requestPermissions(final Fragment fragment, final CallBack callBack, final String... permissions) {
-        new RxPermissions(fragment)
-                .request(permissions)
+        Observable.just(1)
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Function<Integer, ObservableSource<Boolean>>() {
+                    @Override
+                    public ObservableSource<Boolean> apply(Integer integer) throws Exception {
+                        return new RxPermissions(fragment)
+                                .request(permissions);
+                    }
+                })
                 .subscribe(new Consumer<Boolean>() {
                     @Override
                     public void accept(Boolean aBoolean) throws Exception {

@@ -11,6 +11,15 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 
+/*
+        new AppSettingsDialog.Builder(this)
+                .setTitle("权限申请")
+                .setRationale("在设置-应用-番禺民生卡中开启相机权限,以正常使用拍照、刷脸等功能")
+                .setPositiveButton("去设置")
+                .setNegativeButton("取消")
+                .build()
+                .show();
+ */
 public class AppSettingsDialog{
     public static final int DEFAULT_SETTINGS_REQ_CODE = 16061;
 
